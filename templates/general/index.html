@@ -1,0 +1,61 @@
+{% extends 'shared/layout.html'%}
+
+{% block head %}
+<link href="{{ url_for('static',filename='CSS/index.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static',filename='CSS/goToTopButton.css') }}" rel="stylesheet" type="text/css"> 
+<title>Jeopardy Trainer</title>
+{% endblock %}
+
+
+{% block body %}
+<div class="bgimg-1">
+    <div class="caption">
+    <span class="caption"></span>
+    </div>
+  </div>
+  
+  <div style="color: rgb(248, 245, 245);background-color:rgb(110, 93, 184);text-align:center;padding:50px 80px;text-align: justify;">
+    <h3 style="color:rgb(248, 245, 245);text-align:center;">Como Funciona</h3>
+    <p>Quieres ganar en Jeoparty pero no sabes como prepararte de la manera correcta?. No te preocupes con esta aplicacion no abra pregunta que se te escape!. Nustra aplicacion posse todas las preguntas realisadas en los show anteriores organizadas por categoria y te dara datos utiles en forma de estadisiticas ademas de tener una zona de practica la cual te preparara enviandote preguntas de manera aleatoria.</p>
+  </div>
+  
+  <div class="bgimg-2">
+    <div class="caption">
+    <span class="caption" style="background-color:transparent;font-size:25px;color:transparent;"></span>
+    </div>
+  </div>
+  
+  <div style="color: rgb(248, 245, 245);background-color:rgb(110, 93, 184);text-align:center;padding:50px 80px;text-align: justify;">
+    <h3 style="color:rgb(248, 245, 245);text-align:center;"> Aqui puedes seleccionar si ver las estadisticas o ralizar una practica en base a las preguntas que tenemos almacenadas</h3>
+  </div>
+  
+  <div class="bgimg-3">
+    <div class="caption2">
+      <button onclick="window.location.href='/training/train'"; type="submit" class="btn btn-primary btn-lg" style='color: rgb(248, 245, 245);background-color:rgb(233, 122, 19); width:200px; height:200px'>Realizar una Practica!</button>
+       &emsp;
+       &emsp;
+      <button onclick="window.location.href='/statistics/categoriesStatistics'"; type="submit" class="btn btn-primary btn-lg" style='color: rgb(248, 245, 245);background-color:rgb(233, 122, 19); width:200px; height:200px'>Revisar las Estadisticas!</button>  
+    </div>
+  </div>
+  
+  <div style="color: rgb(165, 15, 15);background-color:rgb(110, 93, 184);text-align:center;padding:50px 80px;text-align: justify;">
+    <h3 style="color:rgb(248, 245, 245);text-align:center;"></h3>
+    <p></p>
+  </div>
+
+    <div class="caption">
+    <span class="caption" style="background-color:transparent;font-size:25px;color:transparent;"></span>
+    </div>
+
+  <div style="color: rgb(248, 245, 245);background-color:rgb(110, 93, 184);text-align:center;padding:50px 80px;text-align: justify;">
+    <h3 style="color:rgb(248, 245, 245);text-align:center;"></h3>
+    <p></p>
+  </div>
+
+
+  <button onclick="topFunction()" id="myBtn" title="Go to top">Subir</button> 
+
+   
+
+  <script src="{{ url_for('static',filename='JS/goToTopButton.js') }}"></script>
+{% endblock %}

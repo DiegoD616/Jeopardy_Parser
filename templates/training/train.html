@@ -1,0 +1,142 @@
+{% extends 'shared/layout.html'%}
+
+{% block head %}
+<title>Practica</title>
+<style>
+    section {
+        margin-top: 5%;
+    }
+
+    #contenedorPregunta {
+        margin-top: 5%;
+    }
+
+    #contenedorRespuesta {
+        margin-top: 5%;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div  class="container" style="margin-top: 5%; margin-bottom: 5%;">
+    <section  id="titulo" class="container">
+        <h1 class="text-center fst-italic fw-bold display-6">Modo Practica</h1>
+        <p class="text-center fst-italic .fs-1 text"> 
+            La siguiente seccion permite realizar una practica para participar en el concurso de televisión 
+            Jeopardy!
+        </p>
+    </section>
+    <hr>
+    <section id="categoria" class="container">
+        <h2 class="text-center fst-italic fw-bold">Elegir categoria para las preguntas</h2>
+        <p class="text-center fst-italic .fs-1 text">
+            Estas son las categoria disponibles para realizar la practica. 
+        </p>
+        <select id="categorieSelect" class="form-select" aria-label="Categorie select">
+        </select>
+    </section>
+    <section id="dificultad" class="container">
+        <h2 class="text-center fst-italic fw-bold">Elegir dificultad para las preguntas</h2>
+        <div class="btn-block text-center"  style=" display: block;">
+            <button style="padding: auto;" name="facil" class="btn btn-primary btn-block" onclick= "imprimirListaFacil()">Facil</button>
+            <button name="dificil" class="btn btn-primary btn-block" onclick="imprimirListaDificil()">Dificil</button>
+        </div>
+    </section>
+    <section class="container" id="contenedorJuego" style="display: none;">
+        <div class="text-center">
+            <div id="contenedorPregunta"></div>
+            <div id="contenedorRespuesta"></div>
+        </div>
+        <button style="padding: auto; " name="siguiente" class="btn btn-primary btn-block" onclick= "siguiente()">Siguiente</button>
+        &emsp;
+        &emsp;
+        &emsp;
+        <button style="padding: auto;" name="respuesta" class="btn btn-primary btn-block" onclick= "respuesta()">Respuesta</button>
+        &emsp;
+        &emsp;
+        &emsp;
+        <button style="padding: auto;" name="terminar" class="btn btn-primary btn-block" onclick= "reiniciar()">Reiniciar</button>
+    </section>
+</div>
+<script>
+    fetch('/statistics/popularCategories', {method: "POST"})
+    .then(response => response.json()).then(json => {fillSelect(json)});
+
+    function fillSelect(data) {
+        let select = document.getElementById("categorieSelect")
+        let categories = Object.keys(data).sort()
+        for (const idx in categories) {
+            let new_li = document.createElement("option")
+            categorie = categories[idx]
+            new_li.setAttribute("value",categorie)
+            new_li.appendChild(document.createTextNode(categorie))
+            select.appendChild(new_li)
+        }
+    }
+
+</script>
+
+<script>
+  let preguntas = null
+  let preguntasIdx = 0
+  let mostrado = true
+  async function imprimirListaDificil() {
+    let value = document.getElementById('categorieSelect').value
+    preguntasIdx = 0
+    preguntas = await fetch('/train/getHardQuestions/'+value,{method: "POST"})
+    .then(response => response.json()).then(array => array);
+    mostrarJuego()
+    siguiente()
+  }
+
+  async function imprimirListaFacil() {
+    let value = document.getElementById('categorieSelect').value
+    preguntasIdx = 0
+    preguntas = await fetch('/train/getEasyQuestions/'+value,{method: "POST"})
+    .then(response => response.json()).then(array => array);
+    mostrarJuego()
+    siguiente()
+  }
+
+  function mostrarJuego() {
+    document.getElementById("titulo").style.display = "none";
+    document.getElementById("categoria").style.display = "none";
+    document.getElementById("dificultad").style.display = "none";
+    document.getElementById("contenedorJuego").style.display = "block";
+  }
+
+  function siguiente() {
+      if(mostrado){
+          let pregunta = "Pregunta: " + preguntas[preguntasIdx][1].replaceAll('\\"','"')
+          document.getElementById("contenedorPregunta").innerHTML = ""
+          document.getElementById("contenedorRespuesta").innerHTML = ""
+          let nodo = document.createElement("h4")
+          nodo.innerText = pregunta
+          document.getElementById("contenedorPregunta").appendChild(nodo)
+      }
+    mostrado=false
+  }
+
+  function respuesta(){
+    if(!mostrado){
+        let respuetatxt = "Respuesta: " + preguntas[preguntasIdx][2].replaceAll('\\"','"')
+        document.getElementById("contenedorRespuesta").innerHTML = ""
+        let nodo = document.createElement("h4")
+        nodo.innerText = respuetatxt
+        document.getElementById("contenedorRespuesta").appendChild(nodo)
+        preguntasIdx +=1
+    }
+    mostrado = true
+  }
+
+  function reiniciar(){
+    document.getElementById("titulo").style.display = "";
+    document.getElementById("categoria").style.display = "";
+    document.getElementById("dificultad").style.display = "";
+    document.getElementById("contenedorJuego").style.display = "none";
+  }
+    
+</script>
+  
+{% endblock %}
+

@@ -1,0 +1,8 @@
+Instrucciones para la ejecución en linux linux:
+    1- Ingresar a la carpeta raiz del proyecto "programadas-los-salchipapas"
+    2- Usar el comando: python3 ./Proyecto1/main.py ./Proyecto1/Archivos_testing/JEO3.json
+    3- Abrir el documento de resultados que se crea para ver la impresion. 
+
+Se requiere tener instalado  los siguientes paquetes:
+    1- numpy
+    2- scikit-learn 

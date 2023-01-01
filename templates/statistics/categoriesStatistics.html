@@ -1,0 +1,64 @@
+{% extends 'shared/layout.html'%}
+
+{% block head %}
+<title>Estadísticas</title>
+{% endblock %}
+
+{% block body %}
+<div class="container" style="margin-top: 5%; margin-bottom: 5%;">
+    <section class="container">
+        <h1 class="text-center fst-italic fw-bold display-6">Las categorias más populares en la historia de Jeopardy</h1>
+        <p class="text-center fst-italic .fs-1 text">
+            Las siguientes son las categorias cuya cantidad de prguntas es el triple
+            con respecto al promedio, esto las hace las categorías más recurrentes del show.
+        </p>
+        <canvas id="myChart"></canvas>
+    </section>
+    <hr>
+    <section class="container">
+        <h2 class="text-center fst-italic fw-bold">Palabras clave</h2>
+        <p class="text-center fst-italic .fs-1 text">
+            Estas son palabras clave extraidas automaticamente 
+            de las preguntas de la categoria seleccionada. Estas palabras deben servir como guía
+            cuando quiera estudiar.
+        </p>
+        <select id="categorieSelect" class="form-select" aria-label="Categorie select" onchange="showKeyWords(value)">
+        </select>
+        <ul class="list-group" id="listaPalabrasClave"> 
+        </ul> 
+    </section>
+</div>
+<script>
+fetch('/statistics/popularCategories',{method: "POST"})
+    .then(response => response.json()).then(json => {createGraph(json); fillSelect(json)});
+
+function fillSelect(data) {
+    let select = document.getElementById("categorieSelect")
+    let categories = Object.keys(data).sort()
+    for (const idx in categories) {
+        let new_li = document.createElement("option")
+        categorie = categories[idx]
+        new_li.setAttribute("value",categorie)
+        new_li.appendChild(document.createTextNode(categorie))
+        select.appendChild(new_li)
+    }
+    showKeyWords(categories[0])
+}
+
+function showKeyWords(value) {
+    fetch('/statistics/keyWords/'+value+'/5',{method: "POST"})
+    .then(response => response.json()).then(data => {
+        let ul = document.getElementById("listaPalabrasClave")
+        ul.innerHTML = ""
+        for (const idx in data) {
+            let new_li = document.createElement("li")
+            new_li.setAttribute("class","list-group-item")
+            new_li.appendChild(document.createTextNode(data[idx]))
+            ul.appendChild(new_li)
+        }
+    });
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='JS/chart.js')}}"></script>
+{% endblock %}
